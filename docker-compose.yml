@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: helpflow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: helpflow_db
+      POSTGRES_USER: helpflow_user
+      POSTGRES_PASSWORD: helpflow_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U helpflow_user -d helpflow_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - helpflow-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  helpflow-network:
+    driver: bridge

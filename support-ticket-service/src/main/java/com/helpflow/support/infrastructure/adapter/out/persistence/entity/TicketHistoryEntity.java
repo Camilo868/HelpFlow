@@ -2,17 +2,11 @@ package com.helpflow.support.infrastructure.adapter.out.persistence.entity;
 
 import com.helpflow.support.domain.enums.TicketStatus;
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ticket_histories")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class TicketHistoryEntity {
 
     @Id
@@ -40,10 +34,69 @@ public class TicketHistoryEntity {
     @Column(columnDefinition = "TEXT")
     private String comments;
 
+    public TicketHistoryEntity() {
+    }
+
     @PrePersist
     public void prePersist() {
         if (changeDate == null) {
             changeDate = LocalDateTime.now();
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public TicketEntity getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(TicketEntity ticket) {
+        this.ticket = ticket;
+    }
+
+    public TicketStatus getPreviousStatus() {
+        return previousStatus;
+    }
+
+    public void setPreviousStatus(TicketStatus previousStatus) {
+        this.previousStatus = previousStatus;
+    }
+
+    public TicketStatus getNewStatus() {
+        return newStatus;
+    }
+
+    public void setNewStatus(TicketStatus newStatus) {
+        this.newStatus = newStatus;
+    }
+
+    public String getChangedBy() {
+        return changedBy;
+    }
+
+    public void setChangedBy(String changedBy) {
+        this.changedBy = changedBy;
+    }
+
+    public LocalDateTime getChangeDate() {
+        return changeDate;
+    }
+
+    public void setChangeDate(LocalDateTime changeDate) {
+        this.changeDate = changeDate;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 }

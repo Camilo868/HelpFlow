@@ -3,7 +3,6 @@ package com.helpflow.support.infrastructure.adapter.out.persistence.entity;
 import com.helpflow.support.domain.enums.Role;
 import com.helpflow.support.domain.enums.UserStatus;
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,11 +10,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class UserEntity {
 
     @Id
@@ -55,8 +49,10 @@ public class UserEntity {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "requester", fetch = FetchType.LAZY)
-    @Builder.Default
     private List<TicketEntity> tickets = new ArrayList<>();
+
+    public UserEntity() {
+    }
 
     @PrePersist
     public void prePersist() {
@@ -74,5 +70,101 @@ public class UserEntity {
     @PreUpdate
     public void preUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDocument() {
+        return document;
+    }
+
+    public void setDocument(String document) {
+        this.document = document;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCorporateEmail() {
+        return corporateEmail;
+    }
+
+    public void setCorporateEmail(String corporateEmail) {
+        this.corporateEmail = corporateEmail;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getHeadquarters() {
+        return headquarters;
+    }
+
+    public void setHeadquarters(String headquarters) {
+        this.headquarters = headquarters;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public List<TicketEntity> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<TicketEntity> tickets) {
+        this.tickets = tickets;
     }
 }

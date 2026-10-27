@@ -1,8 +1,5 @@
 package com.helpflow.support.domain.enums;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 public enum TicketStatus {
     ABIERTO,
     ASIGNADO,

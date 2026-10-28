@@ -18,10 +18,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.helpflow.support.application.port.out.TicketMetricsPort;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private final TicketMetricsPort ticketMetricsPort;
+
+    public GlobalExceptionHandler(TicketMetricsPort ticketMetricsPort) {
+        this.ticketMetricsPort = ticketMetricsPort;
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ProblemDetail handleEntityNotFound(EntityNotFoundException ex, HttpServletRequest request) {
@@ -50,11 +57,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationFailedException.class)
     public ProblemDetail handleAuthenticationFailed(AuthenticationFailedException ex, HttpServletRequest request) {
+        ticketMetricsPort.recordAuthFailure();
         return buildProblemDetail(HttpStatus.UNAUTHORIZED, "Authentication Failed", ex.getMessage(), request, null);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ProblemDetail handleAccessDenied(AccessDeniedException ex, HttpServletRequest request) {
+        ticketMetricsPort.recordAccessDenied();
         return buildProblemDetail(HttpStatus.FORBIDDEN, "Access Denied", "You do not have permission to access this resource", request, null);
     }
 

@@ -19,13 +19,16 @@ public class TransitionTicketService implements TransitionTicketUseCase {
     private final TicketRepositoryPort ticketRepositoryPort;
     private final TechnicianRepositoryPort technicianRepositoryPort;
     private final TicketHistoryRepositoryPort ticketHistoryRepositoryPort;
+    private final com.helpflow.support.application.port.out.TicketMetricsPort ticketMetricsPort;
 
     public TransitionTicketService(TicketRepositoryPort ticketRepositoryPort,
                                    TechnicianRepositoryPort technicianRepositoryPort,
-                                   TicketHistoryRepositoryPort ticketHistoryRepositoryPort) {
+                                   TicketHistoryRepositoryPort ticketHistoryRepositoryPort,
+                                   com.helpflow.support.application.port.out.TicketMetricsPort ticketMetricsPort) {
         this.ticketRepositoryPort = ticketRepositoryPort;
         this.technicianRepositoryPort = technicianRepositoryPort;
         this.ticketHistoryRepositoryPort = ticketHistoryRepositoryPort;
+        this.ticketMetricsPort = ticketMetricsPort;
     }
 
     @Override
@@ -45,8 +48,16 @@ public class TransitionTicketService implements TransitionTicketUseCase {
         Ticket ticket = findTicket(ticketId);
         TicketStatus previous = ticket.getStatus();
 
+        if (ticket.isSlaBreached(java.time.LocalDateTime.now())) {
+            ticketMetricsPort.recordSlaBreached(ticket.getCategory(), ticket.getPriority());
+        }
+
         ticket.resolve(resolutionNotes);
         Ticket saved = ticketRepositoryPort.save(ticket);
+
+        if (ticket.getCreatedAt() != null) {
+            ticketMetricsPort.recordResolutionTime(java.time.Duration.between(ticket.getCreatedAt(), java.time.LocalDateTime.now()));
+        }
 
         recordHistory(saved.getId(), previous, saved.getStatus(), username, resolutionNotes);
         return saved;

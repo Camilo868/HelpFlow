@@ -29,17 +29,20 @@ public class AssignTicketService implements AssignTicketUseCase {
     private final AssignmentRepositoryPort assignmentRepositoryPort;
     private final TicketHistoryRepositoryPort ticketHistoryRepositoryPort;
     private final TechnicianDispatchPort technicianDispatchPort;
+    private final com.helpflow.support.application.port.out.TicketMetricsPort ticketMetricsPort;
 
     public AssignTicketService(TicketRepositoryPort ticketRepositoryPort,
                                TechnicianRepositoryPort technicianRepositoryPort,
                                AssignmentRepositoryPort assignmentRepositoryPort,
                                TicketHistoryRepositoryPort ticketHistoryRepositoryPort,
-                               TechnicianDispatchPort technicianDispatchPort) {
+                               TechnicianDispatchPort technicianDispatchPort,
+                               com.helpflow.support.application.port.out.TicketMetricsPort ticketMetricsPort) {
         this.ticketRepositoryPort = ticketRepositoryPort;
         this.technicianRepositoryPort = technicianRepositoryPort;
         this.assignmentRepositoryPort = assignmentRepositoryPort;
         this.ticketHistoryRepositoryPort = ticketHistoryRepositoryPort;
         this.technicianDispatchPort = technicianDispatchPort;
+        this.ticketMetricsPort = ticketMetricsPort;
     }
 
     @Override
@@ -88,6 +91,10 @@ public class AssignTicketService implements AssignTicketUseCase {
                 "Assigned to technician " + technician.getName()
         );
         ticketHistoryRepositoryPort.save(history);
+
+        if (ticket.getCreatedAt() != null) {
+            ticketMetricsPort.recordFirstResponseTime(java.time.Duration.between(ticket.getCreatedAt(), java.time.LocalDateTime.now()));
+        }
 
         return savedAssignment;
     }

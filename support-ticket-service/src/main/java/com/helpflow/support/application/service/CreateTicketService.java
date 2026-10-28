@@ -5,6 +5,7 @@ import com.helpflow.support.application.port.in.CreateTicketUseCase;
 import com.helpflow.support.application.port.out.TicketHistoryRepositoryPort;
 import com.helpflow.support.application.port.out.TicketRepositoryPort;
 import com.helpflow.support.application.port.out.UserRepositoryPort;
+import com.helpflow.support.application.port.out.TicketMetricsPort;
 import com.helpflow.support.domain.enums.TicketStatus;
 import com.helpflow.support.domain.exception.EntityNotFoundException;
 import com.helpflow.support.domain.model.Ticket;
@@ -20,13 +21,16 @@ public class CreateTicketService implements CreateTicketUseCase {
     private final TicketRepositoryPort ticketRepositoryPort;
     private final UserRepositoryPort userRepositoryPort;
     private final TicketHistoryRepositoryPort ticketHistoryRepositoryPort;
+    private final TicketMetricsPort ticketMetricsPort;
 
     public CreateTicketService(TicketRepositoryPort ticketRepositoryPort,
                                UserRepositoryPort userRepositoryPort,
-                               TicketHistoryRepositoryPort ticketHistoryRepositoryPort) {
+                               TicketHistoryRepositoryPort ticketHistoryRepositoryPort,
+                               TicketMetricsPort ticketMetricsPort) {
         this.ticketRepositoryPort = ticketRepositoryPort;
         this.userRepositoryPort = userRepositoryPort;
         this.ticketHistoryRepositoryPort = ticketHistoryRepositoryPort;
+        this.ticketMetricsPort = ticketMetricsPort;
     }
 
     @Override
@@ -47,6 +51,7 @@ public class CreateTicketService implements CreateTicketUseCase {
         );
 
         Ticket savedTicket = ticketRepositoryPort.save(ticket);
+        ticketMetricsPort.recordTicketCreated(savedTicket.getCategory(), savedTicket.getPriority());
 
         TicketHistory history = TicketHistory.create(
                 savedTicket.getId(),

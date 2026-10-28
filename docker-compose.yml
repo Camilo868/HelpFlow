@@ -19,6 +19,38 @@ services:
     networks:
       - helpflow-network
 
+  technician-dispatch-service:
+    build:
+      context: ./technician-dispatch-service
+      dockerfile: Dockerfile
+    container_name: helpflow-technician-dispatch
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    networks:
+      - helpflow-network
+
+  support-ticket-service:
+    build:
+      context: ./support-ticket-service
+      dockerfile: Dockerfile
+    container_name: helpflow-support-ticket
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/helpflow_db
+      SPRING_DATASOURCE_USERNAME: helpflow_user
+      SPRING_DATASOURCE_PASSWORD: helpflow_password
+      TECHNICIAN_DISPATCH_SERVICE_URL: http://technician-dispatch-service:8081
+    depends_on:
+      db:
+        condition: service_healthy
+      technician-dispatch-service:
+        condition: service_started
+    networks:
+      - helpflow-network
+
 volumes:
   postgres_data:
     driver: local

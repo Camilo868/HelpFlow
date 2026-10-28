@@ -1,0 +1,715 @@
+{
+	"info": {
+		"_postman_id": "a4f8a85c-6e3e-4d43-984b-helpflow-api",
+		"name": "HelpFlow - Sistema Integral de Gestión de Soporte TI",
+		"description": "Colección completa de endpoints para los microservicios de HelpFlow (support-ticket-service y technician-dispatch-service) con gestión automática de variables y autenticación JWT.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "dispatchUrl",
+			"value": "http://localhost:8081",
+			"type": "string"
+		},
+		{
+			"key": "bearer_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ticketId",
+			"value": "1",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Autenticación",
+			"item": [
+				{
+					"name": "Login Admin (Guarda Bearer Token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('bearer_token', jsonData.token);",
+									"    console.log('Token JWT Bearer guardado exitosamente.');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"corporateEmail\": \"admin@helpflow.com\",\n    \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login Usuario Estándar",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('bearer_token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"corporateEmail\": \"juan.usuario@helpflow.com\",\n    \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login Técnico",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('bearer_token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"corporateEmail\": \"carlos.redes@helpflow.com\",\n    \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "Registrar Nuevo Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"document\": \"1000000004\",\n    \"name\": \"Maria Gomez\",\n    \"corporateEmail\": \"maria.gomez@helpflow.com\",\n    \"password\": \"Password123!\",\n    \"headquarters\": \"MEDELLIN\",\n    \"department\": \"TALENTO_HUMANO\",\n    \"role\": \"ROLE_USUARIO\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Gestión de Tickets",
+			"item": [
+				{
+					"name": "Crear Ticket (Incidencia de Red)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.id) {",
+									"    pm.collectionVariables.set('ticketId', jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"requesterId\": 3,\n    \"title\": \"Sin conexión a Internet en oficina central\",\n    \"description\": \"Caída masiva de señal en el switch principal del piso 2\",\n    \"category\": \"RED\",\n    \"priority\": \"ALTA\",\n    \"headquarters\": \"MEDELLIN\",\n    \"affectedAsset\": \"SW-P2-MED\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tickets",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tickets"
+							]
+						}
+					}
+				},
+				{
+					"name": "Crear Ticket (Incidencia de Hardware)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"requesterId\": 3,\n    \"title\": \"Falla en fuente de poder de servidor contable\",\n    \"description\": \"El equipo no enciende tras reinicio eléctrico\",\n    \"category\": \"HARDWARE\",\n    \"priority\": \"CRITICA\",\n    \"headquarters\": \"MEDELLIN\",\n    \"affectedAsset\": \"SRV-CONT-01\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tickets",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tickets"
+							]
+						}
+					}
+				},
+				{
+					"name": "Listar Todos los Tickets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/tickets",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tickets"
+							]
+						}
+					}
+				},
+				{
+					"name": "Filtrar Tickets por Estado (ABIERTO)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/tickets?status=ABIERTO",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tickets"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "ABIERTO"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Filtrar Tickets por Prioridad (ALTA)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/tickets?priority=ALTA",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tickets"
+							],
+							"query": [
+								{
+									"key": "priority",
+									"value": "ALTA"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Consultar Ticket por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/tickets/{{ticketId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tickets",
+								"{{ticketId}}"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Despacho y Asignación",
+			"item": [
+				{
+					"name": "Solicitar Despacho Directo (Microservicio 8081)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ticketId\": 1,\n    \"categoria\": \"RED\",\n    \"prioridad\": \"ALTA\"\n}"
+						},
+						"url": {
+							"raw": "{{dispatchUrl}}/technician-dispatch",
+							"host": [
+								"{{dispatchUrl}}"
+							],
+							"path": [
+								"technician-dispatch"
+							]
+						}
+					}
+				},
+				{
+					"name": "Asignar Técnico al Ticket (Orquestado en 8080)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/tickets/{{ticketId}}/assign",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tickets",
+								"{{ticketId}}",
+								"assign"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Ciclo de Vida del Ticket",
+			"item": [
+				{
+					"name": "Iniciar Progreso (EN_PROGRESO)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comments\": \"Inicio de diagnóstico presencial y revisión de patch panels.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tickets/{{ticketId}}/start",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tickets",
+								"{{ticketId}}",
+								"start"
+							]
+						}
+					}
+				},
+				{
+					"name": "Resolver Ticket (RESUELTO)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comments\": \"Se reemplazó el conector RJ-45 dañado y se restableció el enlace troncal con éxito.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tickets/{{ticketId}}/resolve",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tickets",
+								"{{ticketId}}",
+								"resolve"
+							]
+						}
+					}
+				},
+				{
+					"name": "Cerrar Ticket (CERRADO)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/tickets/{{ticketId}}/close",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tickets",
+								"{{ticketId}}",
+								"close"
+							]
+						}
+					}
+				},
+				{
+					"name": "Escalar Ticket (Sube Prioridad)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comments\": \"Impacto extendido a usuarios VIP del área de presidencia.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tickets/{{ticketId}}/escalate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tickets",
+								"{{ticketId}}",
+								"escalate"
+							]
+						}
+					}
+				},
+				{
+					"name": "Cancelar Ticket (CANCELADO)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comments\": \"Incidencia reportada por duplicado; se gestionará en el ticket raíz.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tickets/{{ticketId}}/cancel",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tickets",
+								"{{ticketId}}",
+								"cancel"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Observabilidad y Métricas",
+			"item": [
+				{
+					"name": "Health Check (support-ticket-service)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"health"
+							]
+						}
+					}
+				},
+				{
+					"name": "Health Check (technician-dispatch-service)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dispatchUrl}}/actuator/health",
+							"host": [
+								"{{dispatchUrl}}"
+							],
+							"path": [
+								"actuator",
+								"health"
+							]
+						}
+					}
+				},
+				{
+					"name": "Listado de Métricas Actuator",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/metrics",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"metrics"
+							]
+						}
+					}
+				},
+				{
+					"name": "Métrica - Tickets Creados",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/metrics/helpflow.tickets.created.total",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"metrics",
+								"helpflow.tickets.created.total"
+							]
+						}
+					}
+				},
+				{
+					"name": "Métrica - Tiempos de Resolución",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/metrics/helpflow.tickets.resolution.time",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"metrics",
+								"helpflow.tickets.resolution.time"
+							]
+						}
+					}
+				},
+				{
+					"name": "Métrica - Violaciones de SLA",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/metrics/helpflow.tickets.sla_breached.total",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"metrics",
+								"helpflow.tickets.sla_breached.total"
+							]
+						}
+					}
+				},
+				{
+					"name": "Prometheus Scrape Endpoint",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/prometheus",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"prometheus"
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}

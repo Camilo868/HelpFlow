@@ -41,28 +41,28 @@ The system is architected into two decoupled microservices:
 
 ```mermaid
 graph TB
-    subgraph Clients
-        C1[Web / Mobile Clients]
-        C2[Postman / Swagger UI]
+    subgraph Clients["Clients"]
+        C1["Web / Mobile Clients"]
+        C2["Postman / Swagger UI"]
     end
 
-    subgraph "HelpFlow Ecosystem"
-        subgraph "support-ticket-service (:8080)"
-            AUTH[Authentication Controller /auth]
-            TICKETS[Ticket Controller /tickets]
-            METRICS[Micrometer / Actuator]
-            SEC[Spring Security JWT & RBAC Filter]
-            REST_CLIENT[REST Client Outbound Adapter]
+    subgraph Ecosystem["HelpFlow Ecosystem"]
+        subgraph SupportService["support-ticket-service (:8080)"]
+            AUTH["Authentication Controller /auth"]
+            TICKETS["Ticket Controller /tickets"]
+            METRICS["Micrometer / Actuator"]
+            SEC["Spring Security JWT & RBAC Filter"]
+            REST_CLIENT["REST Client Outbound Adapter"]
         end
 
-        subgraph "technician-dispatch-service (:8081)"
-            DISPATCH_API[Dispatch Controller /technician-dispatch]
-            DISPATCH_CORE[Deterministic Dispatch Engine]
+        subgraph DispatchService["technician-dispatch-service (:8081)"]
+            DISPATCH_API["Dispatch Controller /technician-dispatch"]
+            DISPATCH_CORE["Deterministic Dispatch Engine"]
         end
 
-        subgraph "Data & Persistence Layer"
-            PG[(PostgreSQL 16 Alpine :5435)]
-            MIGRATIONS[Flyway Versioned Migrations: V1, V2, V3]
+        subgraph Persistence["Data & Persistence Layer"]
+            PG[("PostgreSQL 16 Alpine :5435")]
+            MIGRATIONS["Flyway Versioned Migrations: V1, V2, V3"]
         end
     end
 
@@ -75,7 +75,7 @@ graph TB
     DISPATCH_API --> DISPATCH_CORE
     TICKETS -->|JPA / Hibernate / JDBC| PG
     MIGRATIONS -->|Flyway Schema Evolution| PG
-    METRICS -->|/actuator/prometheus| PrometheusServer[Prometheus Server / Scraper]
+    METRICS -->|/actuator/prometheus| PrometheusServer["Prometheus Server / Scraper"]
 ```
 
 ---
@@ -92,26 +92,26 @@ Both microservices strictly follow **Hexagonal Architecture (Ports and Adapters)
 ```mermaid
 graph LR
     subgraph Inbound_Adapters["Inbound Adapters"]
-        REST_IN[TicketController / AuthController]
+        REST_IN["TicketController / AuthController"]
     end
 
     subgraph Inbound_Ports["Inbound Ports (Use Cases)"]
-        USE_CASES[CreateTicketUseCase<br>AssignTicketUseCase<br>TransitionTicketUseCase<br>AuthUseCase]
+        USE_CASES["CreateTicketUseCase<br/>AssignTicketUseCase<br/>TransitionTicketUseCase<br/>AuthUseCase"]
     end
 
     subgraph Domain["Core Domain (Pure Java)"]
-        MODELS[Ticket<br>Technician<br>User<br>TicketHistory<br>Assignment]
+        MODELS["Ticket<br/>Technician<br/>User<br/>TicketHistory<br/>Assignment"]
     end
 
     subgraph Outbound_Ports["Outbound Ports (SPI)"]
-        PORTS_OUT[TicketRepositoryPort<br>TechnicianRepositoryPort<br>TechnicianDispatchPort<br>TicketMetricsPort<br>TokenProviderPort]
+        PORTS_OUT["TicketRepositoryPort<br/>TechnicianRepositoryPort<br/>TechnicianDispatchPort<br/>TicketMetricsPort<br/>TokenProviderPort"]
     end
 
     subgraph Outbound_Adapters["Outbound Adapters"]
-        PERSISTENCE[TicketPersistenceAdapter (JPA)]
-        DISPATCH_ADAPTER[TechnicianDispatchRestAdapter]
-        SECURITY_ADAPTER[JwtTokenProviderAdapter]
-        METRICS_ADAPTER[MicrometerTicketMetricsAdapter]
+        PERSISTENCE["TicketPersistenceAdapter (JPA)"]
+        DISPATCH_ADAPTER["TechnicianDispatchRestAdapter"]
+        SECURITY_ADAPTER["JwtTokenProviderAdapter"]
+        METRICS_ADAPTER["MicrometerTicketMetricsAdapter"]
     end
 
     REST_IN --> USE_CASES

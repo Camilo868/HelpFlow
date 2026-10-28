@@ -48,7 +48,7 @@ public class User {
 
     public void validateCanCreateTickets() {
         if (!isActive()) {
-            throw new InactiveUserException(String.format("User '%s' is INACTIVE and cannot create tickets", corporateEmail));
+            throw new InactiveUserException(String.format("El usuario '%s' se encuentra INACTIVO y no puede crear tickets", corporateEmail));
         }
     }
 

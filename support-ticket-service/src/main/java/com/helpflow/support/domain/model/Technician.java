@@ -60,7 +60,7 @@ public class Technician {
     public void incrementActiveTickets() {
         if (!hasAvailableCapacity()) {
             throw new TechnicianCapacityExceededException(
-                    String.format("Technician '%s' has reached maximum active tickets limit of %d", name, maxActiveTickets)
+                    String.format("El técnico '%s' ha alcanzado su límite máximo de %d tickets activos", name, maxActiveTickets)
             );
         }
         this.currentActiveTickets++;

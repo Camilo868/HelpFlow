@@ -4,11 +4,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public record LoginRequest(
-        @NotBlank(message = "Corporate email is required")
-        @Email(message = "Must be a valid email format")
+        @NotBlank(message = "El correo corporativo es obligatorio")
+        @Email(message = "El correo corporativo debe tener un formato de email válido")
         String corporateEmail,
 
-        @NotBlank(message = "Password is required")
+        @NotBlank(message = "La contraseña es obligatoria")
         String password
 ) {
 }

@@ -69,7 +69,7 @@ public class AssignTicketService implements AssignTicketUseCase {
         technician.incrementActiveTickets();
         technicianRepositoryPort.save(technician);
 
-        ticket.assignTechnician(technician, "Assigned to " + technician.getName());
+        ticket.assignTechnician(technician, "Asignado al técnico " + technician.getName());
         ticketRepositoryPort.save(ticket);
 
         // 4. Save assignment record and history in transaction
@@ -79,7 +79,7 @@ public class AssignTicketService implements AssignTicketUseCase {
                 assignedBy,
                 availability,
                 estimatedHours,
-                "Assigned with availability " + availability + " and estimated " + estimatedHours + "h"
+                "Asignado con disponibilidad " + availability + " y estimado de " + estimatedHours + "h"
         );
         Assignment savedAssignment = assignmentRepositoryPort.save(assignment);
 
@@ -88,7 +88,7 @@ public class AssignTicketService implements AssignTicketUseCase {
                 previousStatus,
                 TicketStatus.ASIGNADO,
                 assignedBy,
-                "Assigned to technician " + technician.getName()
+                "Asignado al técnico " + technician.getName()
         );
         ticketHistoryRepositoryPort.save(history);
 
@@ -117,7 +117,7 @@ public class AssignTicketService implements AssignTicketUseCase {
                         .filter(t -> isTechnicianEligible(t, ticket))
                         .findFirst()
                         .orElseThrow(() -> new TechnicianCapacityExceededException(
-                                "No eligible technician with available capacity found for category " + ticket.getCategory()
+                                "No se encontró un técnico elegible con disponibilidad para la categoría " + ticket.getCategory()
                         ))
                 );
     }

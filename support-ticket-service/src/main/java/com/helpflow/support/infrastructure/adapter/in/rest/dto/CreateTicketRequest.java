@@ -6,25 +6,25 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record CreateTicketRequest(
-        @NotNull(message = "Requester ID is required")
+        @NotNull(message = "El ID del solicitante es obligatorio")
         Long requesterId,
 
-        @NotBlank(message = "Title is required")
+        @NotBlank(message = "El título del ticket es obligatorio")
         String title,
 
-        @NotBlank(message = "Description is required")
+        @NotBlank(message = "La descripción de la incidencia es obligatoria")
         String description,
 
-        @NotNull(message = "Category is required (HARDWARE, SOFTWARE, RED, ACCESOS, OTRO)")
+        @NotNull(message = "La categoría es obligatoria (HARDWARE, SOFTWARE, RED, ACCESOS, OTRO)")
         TicketCategory category,
 
-        @NotNull(message = "Priority is required (BAJA, MEDIA, ALTA, CRITICA)")
+        @NotNull(message = "La prioridad es obligatoria (BAJA, MEDIA, ALTA, CRITICA)")
         TicketPriority priority,
 
-        @NotBlank(message = "Headquarters is required")
+        @NotBlank(message = "La sede es obligatoria")
         String headquarters,
 
-        @NotBlank(message = "Affected asset is required")
+        @NotBlank(message = "El activo o equipo afectado es obligatorio")
         String affectedAsset
 ) {
 }

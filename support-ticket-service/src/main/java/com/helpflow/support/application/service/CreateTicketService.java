@@ -58,7 +58,7 @@ public class CreateTicketService implements CreateTicketUseCase {
                 null,
                 TicketStatus.ABIERTO,
                 requester.getCorporateEmail(),
-                "Ticket created with SLA deadline: " + savedTicket.getSlaDeadline()
+                "Ticket creado con fecha límite de SLA: " + savedTicket.getSlaDeadline()
         );
         ticketHistoryRepositoryPort.save(history);
 

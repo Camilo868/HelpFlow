@@ -7,27 +7,27 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record RegisterRequest(
-        @NotBlank(message = "Document is required")
+        @NotBlank(message = "El número de documento es obligatorio")
         String document,
 
-        @NotBlank(message = "Name is required")
+        @NotBlank(message = "El nombre completo es obligatorio")
         String name,
 
-        @NotBlank(message = "Corporate email is required")
-        @Email(message = "Must be a valid email format")
+        @NotBlank(message = "El correo corporativo es obligatorio")
+        @Email(message = "El correo corporativo debe tener un formato de email válido")
         String corporateEmail,
 
-        @NotBlank(message = "Password is required")
-        @Size(min = 6, message = "Password must be at least 6 characters")
+        @NotBlank(message = "La contraseña es obligatoria")
+        @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
         String password,
 
-        @NotBlank(message = "Headquarters is required")
+        @NotBlank(message = "La sede es obligatoria")
         String headquarters,
 
-        @NotBlank(message = "Department is required")
+        @NotBlank(message = "El departamento o área es obligatorio")
         String department,
 
-        @NotNull(message = "Role is required (ROLE_USUARIO, ROLE_TECNICO, ROLE_ADMIN)")
+        @NotNull(message = "El rol es obligatorio (ROLE_USUARIO, ROLE_TECNICO, ROLE_ADMIN)")
         Role role
 ) {
 }

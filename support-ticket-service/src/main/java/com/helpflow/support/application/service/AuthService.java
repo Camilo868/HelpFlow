@@ -34,10 +34,10 @@ public class AuthService implements RegisterUserUseCase, AuthenticateUserUseCase
     @Override
     public User register(RegisterUserCommand command) {
         if (userRepositoryPort.existsByDocument(command.document())) {
-            throw new UserAlreadyExistsException("A user already exists with document: " + command.document());
+            throw new UserAlreadyExistsException("Ya existe un usuario con el documento: " + command.document());
         }
         if (userRepositoryPort.existsByCorporateEmail(command.corporateEmail())) {
-            throw new UserAlreadyExistsException("A user already exists with corporate email: " + command.corporateEmail());
+            throw new UserAlreadyExistsException("Ya existe un usuario con el correo corporativo: " + command.corporateEmail());
         }
 
         String hashedPassword = passwordEncoderPort.encode(command.password());
@@ -59,14 +59,14 @@ public class AuthService implements RegisterUserUseCase, AuthenticateUserUseCase
     @Transactional(readOnly = true)
     public AuthResult login(LoginCommand command) {
         User user = userRepositoryPort.findByCorporateEmail(command.corporateEmail())
-                .orElseThrow(() -> new AuthenticationFailedException("Invalid credentials for email: " + command.corporateEmail()));
+                .orElseThrow(() -> new AuthenticationFailedException("Credenciales inválidas para el correo: " + command.corporateEmail()));
 
         if (!user.isActive()) {
-            throw new InactiveUserException("User account is inactive: " + command.corporateEmail());
+            throw new InactiveUserException("La cuenta del usuario se encuentra inactiva: " + command.corporateEmail());
         }
 
         if (!passwordEncoderPort.matches(command.password(), user.getPassword())) {
-            throw new AuthenticationFailedException("Invalid credentials for email: " + command.corporateEmail());
+            throw new AuthenticationFailedException("Credenciales inválidas para el correo: " + command.corporateEmail());
         }
 
         String token = tokenProviderPort.generateToken(user.getCorporateEmail(), user.getRole().name());

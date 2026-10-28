@@ -5,9 +5,9 @@
 
 INSERT INTO users (document, name, corporate_email, password, headquarters, department, role, status)
 VALUES 
-('1000000001', 'Admin HelpFlow', 'admin@helpflow.com', '$2a$10$wT8K4I0kG9zYJ5hN9tC7c.J0hF0tY1wG1oK1mF5jQ7zB9kH6yP3sK', 'MEDELLIN', 'IT_ADMIN', 'ROLE_ADMIN', 'ACTIVO'),
-('TEC-014', 'Carlos Redes', 'carlos.redes@helpflow.com', '$2a$10$wT8K4I0kG9zYJ5hN9tC7c.J0hF0tY1wG1oK1mF5jQ7zB9kH6yP3sK', 'MEDELLIN', 'INFRAESTRUCTURA', 'ROLE_TECNICO', 'ACTIVO'),
-('1000000003', 'Juan Usuario', 'juan.usuario@helpflow.com', '$2a$10$wT8K4I0kG9zYJ5hN9tC7c.J0hF0tY1wG1oK1mF5jQ7zB9kH6yP3sK', 'MEDELLIN', 'FINANZAS', 'ROLE_USUARIO', 'ACTIVO');
+('1000000001', 'Admin HelpFlow', 'admin@helpflow.com', '$2a$10$6QVY5az.rJ4vKjejg6j2t.8zE/viWM.UYsDkjquijFhOH6lt/Yzve', 'MEDELLIN', 'IT_ADMIN', 'ROLE_ADMIN', 'ACTIVO'),
+('TEC-014', 'Carlos Redes', 'carlos.redes@helpflow.com', '$2a$10$6QVY5az.rJ4vKjejg6j2t.8zE/viWM.UYsDkjquijFhOH6lt/Yzve', 'MEDELLIN', 'INFRAESTRUCTURA', 'ROLE_TECNICO', 'ACTIVO'),
+('1000000003', 'Juan Usuario', 'juan.usuario@helpflow.com', '$2a$10$6QVY5az.rJ4vKjejg6j2t.8zE/viWM.UYsDkjquijFhOH6lt/Yzve', 'MEDELLIN', 'FINANZAS', 'ROLE_USUARIO', 'ACTIVO');
 
 INSERT INTO technicians (user_id, document, name, email, specialty, headquarters, max_active_tickets, current_active_tickets, status)
 VALUES
